@@ -1,0 +1,29 @@
+services:
+  nextjs:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: anytech-nextjs
+    restart: unless-stopped
+    expose:
+      - "3000"
+    networks:
+      - anytech-network
+
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: anytech-nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - ./nginx-proxy-manager/data:/data
+      - ./nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+    networks:
+      - anytech-network
+
+networks:
+  anytech-network:
+    driver: bridge
